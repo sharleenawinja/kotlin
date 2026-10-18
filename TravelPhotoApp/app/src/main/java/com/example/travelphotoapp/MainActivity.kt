@@ -1,47 +1,65 @@
 package com.example.travelphotoapp
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.travelphotoapp.ui.theme.TravelPhotoAppTheme
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+    var currentImage = 0
+    lateinit var image: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
-            TravelPhotoAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+        setContentView(R.layout.activity_main)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
-    }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+        val next = findViewById<ImageButton>(R.id.btnNext)
+        val prev = findViewById<ImageButton>(R.id.btnPrev)
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TravelPhotoAppTheme {
-        Greeting("Android")
+        next.setOnClickListener {
+            var idCurrentImageString = "pic$currentImage"
+
+            var idCurrentImageInt = this.resources.getIdentifier(idCurrentImageString, "id", packageName)
+
+            image = findViewById(idCurrentImageInt)
+            image.alpha=0f
+
+            currentImage = (5+currentImage+1)%5
+
+            var idImageToShowString = "pic$currentImage"
+
+            var idImageToShowInt = this.resources.getIdentifier(idImageToShowString, "id", packageName)
+
+            image = findViewById(idImageToShowInt)
+            image.alpha=1f
+
+        }
+
+        prev.setOnClickListener {
+            var idCurrentImageString = "pic$currentImage"
+
+            var idCurrentImageInt = this.resources.getIdentifier(idCurrentImageString, "id", packageName)
+
+            image = findViewById(idCurrentImageInt)
+            image.alpha=0f
+
+            currentImage = (5+currentImage-1)%5
+
+            var idImageToShowString = "pic$currentImage"
+
+            var idImageToShowInt = this.resources.getIdentifier(idImageToShowString, "id", packageName)
+
+            image = findViewById(idImageToShowInt)
+            image.alpha=1f
+        }
     }
 }
